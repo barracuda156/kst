@@ -84,11 +84,19 @@ void ScalarSelector::setIsFOverSR(bool is_f_over_sr)
     _SR->show();
 
     QSize size = _scalar->size();
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    size.setWidth(fontMetrics().width("000000000"));
+#else
     size.setWidth(fontMetrics().horizontalAdvance("000000000"));
+#endif
     _SR->setMinimumSize(size);
     _cutoff->setMinimumSize(size);
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    size.setWidth(fontMetrics().width("0000000000000"));
+#else
     size.setWidth(fontMetrics().horizontalAdvance("0000000000000"));
+#endif
     _scalar->setMinimumSize(size);
 
     //setMinimumWidth(3*min_width + _cutoffLabel->width() + _SRLabel->width()+3*_newScalar->width());
@@ -103,7 +111,11 @@ void ScalarSelector::setIsFOverSR(bool is_f_over_sr)
 }
 
 QSize ScalarSelector::minimumSizeHint() const {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  return QSize(15*fontMetrics().width("m")+ 3 * iconWidth(), iconWidth());
+#else
   return QSize(15*fontMetrics().horizontalAdvance("m")+ 3 * iconWidth(), iconWidth());
+#endif
 }
 
 
@@ -126,15 +138,19 @@ void ScalarSelector::emitSelectionChanged() {
 
 
 void ScalarSelector::setDefaultValue(double value) {
- QString string = QString::number(value);
- int index = _scalar->findText(string);
- if (index<0) {
-   _scalar->addItem(string, QVariant::fromValue(0));
-   _scalar->setCurrentIndex(_scalar->findText(string));
- } else {
-   _scalar->setCurrentIndex(index);
- }
- _defaultsSet = true;
+  QString string = QString::number(value);
+  int index = _scalar->findText(string);
+  if (index<0) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    _scalar->addItem(string, qVariantFromValue(0));
+#else
+    _scalar->addItem(string, QVariant::fromValue(0));
+#endif
+    _scalar->setCurrentIndex(_scalar->findText(string));
+  } else {
+    _scalar->setCurrentIndex(index);
+  }
+  _defaultsSet = true;
 }
 
 
@@ -320,7 +336,11 @@ void ScalarSelector::fillScalars() {
   _scalar->clear();
   foreach (const QString &string, list) {
     ScalarPtr v = scalars.value(string);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    _scalar->addItem(string, qVariantFromValue(v.data()));
+#else
     _scalar->addItem(string, QVariant::fromValue(v.data()));
+#endif
   }
 
   _scalarListSelector->clear();
@@ -329,7 +349,11 @@ void ScalarSelector::fillScalars() {
   if (current) {
     setSelectedScalar(current);
   } else {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    _scalar->addItem(current_text, qVariantFromValue(0));
+#else
     _scalar->addItem(current_text, QVariant::fromValue(0));
+#endif
     _scalar->setCurrentIndex(_scalar->findText(current_text));
     _defaultsSet = true;
   }

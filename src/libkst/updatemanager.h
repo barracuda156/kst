@@ -48,7 +48,11 @@ class KSTCORE_EXPORT UpdateManager : public QObject
     UpdateManager();
     ~UpdateManager();
     static void cleanup();
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    QTime _time;
+#else
     QElapsedTimer _time;
+#endif
 
   private:
     bool _delayedUpdate;

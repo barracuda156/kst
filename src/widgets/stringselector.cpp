@@ -131,7 +131,11 @@ void StringSelector::fillStrings() {
   _string->clear();
   foreach (const QString &string, list) {
     StringPtr s = strings.value(string);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    _string->addItem(string, qVariantFromValue(s.data()));
+#else
     _string->addItem(string, QVariant::fromValue(s.data()));
+#endif
   }
 
   if (_allowEmptySelection) //reset the <None>
@@ -157,7 +161,11 @@ void StringSelector::setAllowEmptySelection(bool allowEmptySelection) {
     _string->removeItem(i);
 
   if (_allowEmptySelection) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    _string->insertItem(0, tr("<None>"), qVariantFromValue(0));
+#else
     _string->insertItem(0, tr("<None>"), QVariant::fromValue(0));
+#endif
     _string->setCurrentIndex(0);
   }
 }

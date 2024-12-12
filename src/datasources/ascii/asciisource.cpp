@@ -238,7 +238,11 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   }
   updateLists();
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  _fileCreationTime_t = QFileInfo(file).created().toTime_t();
+#else
   _fileCreationTime_t = QFileInfo(file).birthTime().toTime_t();
+#endif
 
   int col_count = _fieldList.size() - 1; // minus INDEX
 

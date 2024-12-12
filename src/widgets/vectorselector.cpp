@@ -141,7 +141,11 @@ void VectorSelector::setAllowEmptySelection(bool allowEmptySelection) {
     _vector->removeItem(i);
 
   if (_allowEmptySelection) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    _vector->insertItem(0, tr("<None>"), qVariantFromValue(0));
+#else
     _vector->insertItem(0, tr("<None>"), QVariant::fromValue(0));
+#endif
     _vector->setCurrentIndex(0);
     _editVector->setEnabled(false);
   }
@@ -234,7 +238,11 @@ void VectorSelector::fillVectors() {
   _vector->clear();
   foreach (const QString &string, list) {
     VectorPtr v = vectors.value(string);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    _vector->addItem(string, qVariantFromValue(v.data()));
+#else
     _vector->addItem(string, QVariant::fromValue(v.data()));
+#endif
   }
   _editVector->setEnabled(_vector->count() > 0);
 

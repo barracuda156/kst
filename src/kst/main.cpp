@@ -23,17 +23,27 @@
 __declspec(dllexport)
 #endif
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 void nullMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+#else
+void nullMessageOutput(QtMsgType type, const char *msg)
+#endif
 {
   Q_UNUSED(type)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   Q_UNUSED(context)
+#endif
   Q_UNUSED(msg)
 }
 
 int main(int argc, char *argv[]) {
 
 #ifdef QT_NO_WARNING_OUTPUT
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   qInstallMessageHandler(nullMessageOutput);
+#else
+  qInstallMsgHandler(nullMessageOutput);
+#endif
 #endif
 
 

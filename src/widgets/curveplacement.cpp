@@ -151,7 +151,11 @@ void CurvePlacement::updatePlotListCombo() {
 
   _plotList->clear();
   foreach (PlotItemInterface *plot, _plots) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    _plotList->addItem(plot->plotCleanedName(), qVariantFromValue(plot));
+#else
     _plotList->addItem(plot->plotCleanedName(), QVariant::fromValue(plot));
+#endif
   }
 
   if ((xi>0) && (xi<_plotList->count())) {

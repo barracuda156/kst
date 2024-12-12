@@ -127,11 +127,19 @@ class RenderContext : public QObject {
   }
 
   inline int fontWidth(const QString& txt) const {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    if (p) {
+      return p->fontMetrics().width(txt);
+    } else {
+      return _fm.width(txt);
+    }
+#else
     if (p) {
       return p->fontMetrics().horizontalAdvance(txt);
     } else {
       return _fm.horizontalAdvance(txt);
     }
+#endif
   }
 
   int x, y; // Coordinates we're rendering at

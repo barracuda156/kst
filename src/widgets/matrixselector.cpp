@@ -76,7 +76,11 @@ void MatrixSelector::matrixSelected(QString) {
 }
 
 void MatrixSelector::setSelectedMatrix(MatrixPtr selectedMatrix) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  int i = _matrix->findData(qVariantFromValue(selectedMatrix.data()));
+#else
   int i = _matrix->findData(QVariant::fromValue(selectedMatrix.data()));
+#endif
   if (i != -1) {
     _matrix->setCurrentIndex(i);
   }
@@ -144,7 +148,11 @@ void MatrixSelector::fillMatrices() {
   _matrix->clear();
   foreach (const QString &string, list) {
     MatrixPtr m = matrices.value(string);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    _matrix->addItem(string, qVariantFromValue(m.data()));
+#else
     _matrix->addItem(string, QVariant::fromValue(m.data()));
+#endif
   }
 
   if (current)

@@ -182,7 +182,11 @@ QMap<QString, QString> DataSource::fileMetas() const
   QFileInfo info(_filename);
   map["File name"] = info.fileName();
   map["File path"] = info.path();
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  map["File creation"] = info.created().toString(Qt::ISODate).replace('T', ' ');
+#else
   map["File creation"] = info.birthTime().toString(Qt::ISODate).replace('T', ' ');
+#endif
   map["File modification"] = info.lastModified().toString(Qt::ISODate).replace('T', ' ');
   return map;
 }

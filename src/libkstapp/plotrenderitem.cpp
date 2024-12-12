@@ -631,7 +631,12 @@ void PlotRenderItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     return;
   }
 
-  if (event->button() == Qt::MiddleButton) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  if (event->button() == Qt::MidButton)
+#else
+  if (event->button() == Qt::MiddleButton)
+#endif
+  {
     plotItem()->zoomPrevious();
     event->ignore();
   }

@@ -66,6 +66,13 @@ BugReportWizard::~BugReportWizard() {
 
 void BugReportWizard::reportBug() {
   QUrl url("https://bugs.kde.org/enter_bug.cgi");
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  url.addQueryItem("os", _OS->text());
+  url.addQueryItem("appVersion", _kstVersion->text());
+  url.addQueryItem("package", "kst");
+  url.addQueryItem("kbugreport", "1");
+  url.addQueryItem("kdeVersion", "unspecified");
+#else
   QUrlQuery query;
 
   query.addQueryItem("product", "kst");
@@ -77,6 +84,7 @@ void BugReportWizard::reportBug() {
   // query.addQueryItem("kbugreport", "1");
   // query.addQueryItem("kdeVersion", "unspecified");
   url.setQuery(query);
+#endif
   QDesktopServices::openUrl(url);
 }
 

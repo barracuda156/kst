@@ -543,7 +543,11 @@ void DataWizardPagePlot::updatePlotBox() {
   }
 
   foreach (PlotItemInterface *plot, Data::self()->plotList()) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    _existingPlotName->addItem(plot->plotName(), qVariantFromValue(plot));
+#else
     _existingPlotName->addItem(plot->plotName(), QVariant::fromValue(plot));
+#endif
   }
   bool havePlots = _existingPlotName->count() > 0;
   _cycleExisting->setEnabled(havePlots);

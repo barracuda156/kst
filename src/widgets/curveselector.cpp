@@ -88,7 +88,11 @@ void CurveSelector::setAllowEmptySelection(bool allowEmptySelection) {
     _curve->removeItem(i);
 
   if (_allowEmptySelection) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    _curve->insertItem(0, tr("<None>"), qVariantFromValue(0));
+#else
     _curve->insertItem(0, tr("<None>"), QVariant::fromValue(0));
+#endif
     _curve->setCurrentIndex(0);
   }
 }
@@ -121,7 +125,11 @@ void CurveSelector::fillCurves() {
   _curve->clear();
   foreach (const QString &string, list) {
     CurvePtr r = curves.value(string);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    _curve->addItem(string, qVariantFromValue(r.data()));
+#else
     _curve->addItem(string, QVariant::fromValue(r.data()));
+#endif
   }
 
   if (_allowEmptySelection) //reset the <None>

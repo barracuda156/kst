@@ -132,8 +132,11 @@ private:
     int _progressValue;
     qint64 _progressRows;
     static void rowProgress(QObject*);
-    //QTime _progressTimer;
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    QTime _progressTimer;
+#else
     QElapsedTimer _progressTimer;
+#endif
 
     // TODO remove
     friend class DataInterfaceAsciiString;

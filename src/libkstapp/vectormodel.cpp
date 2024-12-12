@@ -32,13 +32,19 @@ bool VectorModel::addVector(VectorPtr v)
 {
   assert(v);
   if (!_vectorList.contains(v)) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     beginResetModel();
+#endif
     beginInsertColumns(QModelIndex(), columnCount(), columnCount());
     _vectorList.append(v);
     // Standard nb of digits:
     _digitNbList.append(dialogDefaults().value("viewvector/digits",12).toInt());
     endInsertColumns();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     endResetModel();
+#else
+    reset();
+#endif
     _rows = rowCount();
     return true;
   }
@@ -163,8 +169,12 @@ bool VectorModel::setData(const QModelIndex& index, const QVariant& value, int r
 
 void VectorModel::resetIfChanged() {
   if (_rows!=rowCount()) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    reset();
+#else
     beginResetModel();
     endResetModel();
+#endif
     _rows = rowCount();
   }
 }
